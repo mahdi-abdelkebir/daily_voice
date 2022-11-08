@@ -4,9 +4,11 @@ First time using React Native. It was a bit overwhelming especially the differen
 
 Dead tired. This was actually made in 7 days for a competition, imagine that, and I never used React Native before.
 
-It's basically a voice assistant, created using DialogFlow. Though, I didn't dwelve too much into that, simply because I don't have the time to learn it. I just used it for casual dialogue admittedly.
+It's basically a voice assistant. Well, let's say it's an API voice assistant. You say a specific phrase and then it'll communicate with some specific API depending on this phrase, then returns a formatted voice message. 
 
-Let's say it's an API voice assistant. It communicates with your APIs and returns a formatted voice message. Sadly, I used too much time going on about basic things, and only implemented Astrology Sign, Netflix top movies and series, and lastly a Youtube API. You can also see Spotify UI lying around. 
+The voice assistant was created using DialogFlow. Though, I didn't dwelve too much into that, simply because I don't have the time to learn it. I just used it for casual dialogue admittedly.
+
+I also used too much time going on about basic things, and only implemented Astrology Sign, Netflix top movies and series, and lastly a Youtube Trending API. You can also see Spotify UI lying around. 
 
 These APIs were implemented thanks to RapidAPIs.
 
