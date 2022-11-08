@@ -46,13 +46,16 @@ export default function Home ({ navigation }) {
         setMuted(settings.voice.mute);
       }
 
+      if (settings.clear == true) { 
+        setMessages([]);
+        settings.clear = false;
+      }
     }).then(() => {
       if (isInit == true) {
+        setIsInit(false);
         InteractionManager.runAfterInteractions(() => {
           setIsReady(true)
-          Tts.getInitStatus();
         }).then(() => {
-            setIsInit(false);
             handleGoogleResponse("Hello user, what do you want to know about today?");
         });
       } else {
@@ -152,19 +155,27 @@ export default function Home ({ navigation }) {
               }
               break;
             case settings.commands.Summary:
-              Object(services).forEach(async (service) => {
-                var key = service.key;
+              // handleGoogleResponse("Alright. Let me set things up.");
+              var output : any = false;
+              handleGoogleResponse("Alright. Let me set things up.");
+              Object(services).forEach((service) => {
+                var key = service.key ;
                 if (preferences.services[key].daily_summary == true) {
+                  output = true;
                   if (key != "spotify" && key != "weather") {
-                    handleGoogleResponse("Now, for your daily summary: ")
+                    
                     sendAPIRequest(service)
                       .then(data => {
-                        handleGoogleResponse(key+" "+getFormattedService(key, data))
+                        handleGoogleResponse(getFormattedService(key, data))
                       })
                       .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
                     }
                   }
               });
+              
+              if (output == true) {
+                handleGoogleResponse("All services summaries are disabled.");
+              }
               break;
           }
 

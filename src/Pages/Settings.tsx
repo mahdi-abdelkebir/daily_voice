@@ -100,7 +100,7 @@ export function SettingsPage({ navigation }) {
                 switchState={isMuted}
                 switchOnValueChange={onMutedChange}
                 hasNavArrow={false}
-                title='Mute Bot'
+                title='Mute Voice'
             />
             <SettingsList.Item
               title='Accent'
@@ -108,6 +108,16 @@ export function SettingsPage({ navigation }) {
               itemWidth={70}
               titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={true}
+            />
+
+           <SettingsList.Item
+              title='Clear Session'
+              onPress = {() => {
+                settings.clear = true; 
+                alert("Session cleared successfully.")
+              }}
+              itemWidth={70}
+              titleStyle={{color:'black', fontSize: 16}}
             />
             <SettingsList.Header headerStyle={{marginTop:-5}}/>
             <SettingsList.Item

@@ -51,7 +51,7 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
       return `There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+category: ""} are trending in the ${country} today. The top 5 trending videos are:
     ${videoString}`;
     } else {
-      return "Cannot get any video from the internet service now. Please try again later. "+JSON.stringify(data)
+      return "Cannot get any Youtube video from the internet service now. Please try again later. "+JSON.stringify(data)
     }
   }
   
@@ -59,8 +59,7 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
     var str = "";
     
     function render(data, type) {
-      var arrayString = `
-      ${type}: `
+      var arrayString = `- ${type}: `
       for (const item of data) {
         arrayString += `
   ${item.list}.  '${item.name}', viewed ${item.hoursviewed} times. 

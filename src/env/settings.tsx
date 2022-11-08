@@ -12,7 +12,7 @@ var settings = {
     commands: {
         Mute: "shut up",
         Unmute: "talk",
-        Summary: "yes",
+        Summary: "summary",
         Settings: "settings",
     }
 };

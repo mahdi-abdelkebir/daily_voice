@@ -12,7 +12,7 @@ import { Player } from './Pages/Player';
 import { ServiceSettings } from './Pages/Settings/ServiceSettings';
 import LoadingScreen from './components/LoadingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { HeaderBackButton } from '@react-navigation/elements';
 export default class Index extends React.Component {
   state: { isLoaded: false }
 
@@ -44,12 +44,19 @@ export function Navigation() {
         <Stack.Screen 
           name="Settings" 
           component={SettingsPage} 
-          options={{ 
+          options={({navigation, route}) => ({
+            headerLeft: (props) => (
+              <HeaderBackButton
+                {...props}
+                onPress={() => navigation.navigate('Home')}
+              />
+            ),
             headerTintColor: "white",
             headerStyle: {
               backgroundColor:"#263238"
-            } 
-          }}
+            }
+       })}
+          
         />
 
       <Stack.Screen 

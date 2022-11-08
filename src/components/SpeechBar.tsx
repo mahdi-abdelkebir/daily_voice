@@ -51,6 +51,7 @@ class SpeechBar extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         Voice.onSpeechResults = this.onSpeechResults;
+        Voice.onSpeechEnd = this.onSpeechEnd;
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -66,13 +67,19 @@ class SpeechBar extends Component<Props, State> {
     onSpeechResults = (e: SpeechResultsEvent) => {
         if (e.value != undefined) {
             this.result = e.value[0];
-            this._finishListening();
-            this.props.resultCallback(this.result);
+            this._finishListening().then(() => {
+                this.props.resultCallback(this.result);
+            });
+        }
+    };
+
+    onSpeechEnd = () => {
+        if (this.state.started == true) {
+            this.setState({started: false})
         }
     };
 
     async _startRecognizing() {
-
         try {
             await Voice.start('en-US');
             Tts.stop();

@@ -12,7 +12,6 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
         title:"Astrology News",
         description: "Get your daily astrology news depending on your sign.",
         icon: "star-shooting",
-        daily_summary: false,
         api: {
             method: "POST",
             host: "sameer-kumar-aztro-v1.p.rapidapi.com/",
@@ -24,7 +23,6 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
         title:"Netflix Weekly Top 10",
         description: "Find out about the latest netflix movies and series this week.",
         icon: "netflix",
-        daily_summary: false,
         api: {
             method: "GET",
             host: "netflix-weekly-top-10.p.rapidapi.com",
@@ -54,7 +52,6 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
         title:"Weather",
         description: "Get the latest weather forecast of your current location.",
         icon: "weather-cloudy",
-        daily_summary: false
     },
     {
         key: "spotify",
@@ -68,14 +65,15 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
 export const preferences = {
     services: {
         astrology: {
-            daily_summary: false,
+            daily_summary: true,
             sign: {label: "capricorn", value: 0}
         },
         netflix: {
+            daily_summary: true,
             category: {"label": "Both", value: 0}
         },
         youtube: {
-            daily_summary: false,
+            daily_summary: true,
             category: {label: "Now", value: 0},
             country: {label: "US", value: 0},
         },
