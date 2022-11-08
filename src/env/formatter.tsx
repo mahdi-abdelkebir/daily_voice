@@ -25,7 +25,7 @@ Advice: ${data["description"]}
 
 Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky color is ${data["color"]}, and your lucky number is ${data["lucky_number"]}`;
     } else {
-      return "Astrology. Cannot get any horoscope data from the internet service now. Please fix your API settings first."
+      return "Cannot get any horoscope data from the internet service now. Please fix your API settings first."
     }
 
   }
@@ -48,11 +48,10 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
     
       // ${videoString}
       // ${data.videos}
-      return `Youtube.
-There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+category: ""} are trending in the ${country} today. The top 5 trending videos are:
+      return `There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+category: ""} are trending in the ${country} today. The top 5 trending videos are:
     ${videoString}`;
     } else {
-      return "Youtube. Cannot get any video from the internet service now. Please try again later. "+JSON.stringify(data)
+      return "Cannot get any video from the internet service now. Please try again later. "+JSON.stringify(data)
     }
   }
   
@@ -64,7 +63,7 @@ There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+
       ${type}: `
       for (const item of data) {
         arrayString += `
-        ${item.list}.  '${item.name}', viewed ${item.hoursviewed} times. 
+  ${item.list}.  '${item.name}', viewed ${item.hoursviewed} times. 
         `
       }
 
@@ -72,8 +71,7 @@ There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+
     }
 
     if (data.series != null || data.movies != null) {
-      str = `Netflix.
-      In your weekly Netflix top 10, you have:`;
+      str = `In your weekly Netflix top 10, you have:`;
       if (data.series != null) {
         str += render(data.series, "Series")
       } 
@@ -82,7 +80,7 @@ There are ${data.number_of_videos} Youtube videos ${category != "Now"? "about "+
         str += render(data.movies , "Movies")
       }
     } else {
-      str= "Netflix. Cannot get any movies or series from the internet now. Please try again tommorrow. "+JSON.stringify(data)
+      str= "Cannot get any movies or series from the internet now. Please try again tommorrow. "+JSON.stringify(data)
     }
 
     return str;

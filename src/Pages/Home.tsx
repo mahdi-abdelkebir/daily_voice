@@ -152,7 +152,19 @@ export default function Home ({ navigation }) {
               }
               break;
             case settings.commands.Summary:
-              handleGoogleResponse("Executing summary command")
+              Object(services).forEach(async (service) => {
+                var key = service.key;
+                if (preferences.services[key].daily_summary == true) {
+                  if (key != "spotify" && key != "weather") {
+                    handleGoogleResponse("Now, for your daily summary: ")
+                    sendAPIRequest(service)
+                      .then(data => {
+                        handleGoogleResponse(key+" "+getFormattedService(key, data))
+                      })
+                      .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+                    }
+                  }
+              });
               break;
           }
 
@@ -171,6 +183,8 @@ export default function Home ({ navigation }) {
               handleGoogleResponse("Alright, wait a second.")
               sendAPIRequest(service)
                 .then(data => {
+                  console.log(key +" response data: ")
+                  console.log(data)
                   handleGoogleResponse(getFormattedService(key, data))
                 })
                 .catch(err => handleGoogleResponse("Error. "+key+":  "+err));

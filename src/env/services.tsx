@@ -131,7 +131,11 @@ export const sendAPIRequest = async (serviceItem) => {
             var newLink = "https://"+link+params;
             console.log(newLink);
             return fetch(newLink, options)
-            .then(response => response.json())
+            .then(response => {
+                var json = response.json()
+                return json
+            })
+
         }
 
         // return Promise.resolve("test");
@@ -152,23 +156,23 @@ export const sendAPIRequest = async (serviceItem) => {
                     case 0: // TODO/ optimize LATER
                         await sendRequest(item.api.host + item.api.routes[0].path).
                         then((response) => {
-                            r.movies = response.data;
+                            r.movies = response;
                         });
 
                         await sendRequest(item.api.host + item.api.routes[0].path).
                         then((response) => {
-                            r.series = response.data;
+                            r.series = response;
                         });
                         break;
                     case 1: // both
                         await sendRequest(item.api.host + item.api.routes[0].path).
                         then((response) => {
-                            r.movies = response.data;
+                            r.movies = response;
                         });
                     case 2: // series
                         await sendRequest(item.api.host + item.api.routes[1].path).
                         then((response) => {
-                            r.series = response.data;
+                            r.series = response;
                         });
                         break;
                 }
