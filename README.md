@@ -8,7 +8,7 @@ It's basically a voice assistant. Well, let's say it's an API voice assistant. Y
 
 The voice assistant was created using DialogFlow. Though, I didn't dwelve too much into that, simply because I don't have the time to learn it. I just used it for casual dialogue admittedly.
 
-I also used too much time going on about basic things, and only implemented Astrology Sign, Netflix top movies and series, and lastly a Youtube Trending API. You can also see Spotify UI lying around. 
+I also used too much time going on about basic things and abstract vague damned errors, and only implemented Astrology Sign, Netflix top movies and series, and lastly a Youtube Trending API. You can also see Spotify UI lying around. 
 
 These APIs were implemented thanks to RapidAPIs.
 
