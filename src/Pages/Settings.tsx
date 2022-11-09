@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 
 import SettingsList from 'react-native-settings-list';
-import settings, { updateVoice } from '../env/settings';
+import settings, { updateVoice } from '../settings/globalsettings';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import services, { preferences } from '../env/services';
+import services, { preferences } from '../settings/services';
 import { InteractionManager} from 'react-native';
 import LoadingScreen from '../components/LoadingScreen';
 

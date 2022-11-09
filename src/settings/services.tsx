@@ -1,9 +1,14 @@
 
 //Default Settings
 
+import { RAPIDAPI_KEY } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const RapidAPI_Key = "08451ee546msh---12e58cjsn7d9b32e40368";
+export const dialogflowConfig ={
+    "type": "service_account",
+    "project_id": "small-talk-eprc",
+    "client_email": "testclt@small-talk-eprc.iam.gserviceaccount.com",
+}
 
 const services : any[] = [ // must be ordered exactly like voice command in settings!!
     // apis with real links
@@ -62,55 +67,6 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
 ];
 
 
-export const preferences = {
-    services: {
-        astrology: {
-            daily_summary: true,
-            sign: {label: "capricorn", value: 0}
-        },
-        netflix: {
-            daily_summary: true,
-            category: {"label": "Both", value: 0}
-        },
-        youtube: {
-            daily_summary: true,
-            category: {label: "Now", value: 0},
-            country: {label: "US", value: 0},
-        },
-        weather: {
-            daily_summary: false
-        },
-        spotify: {
-            daily_summary: false,
-            playlist_id: "0SXwwegrQui5FwmQSaoNSM"
-        }
-    },
-    phrases: {
-        astrology: 'Astrology',
-        netflix: 'Netflix',
-        youtube: 'Youtube',
-        weather: 'Weather',
-        spotify: 'Music',
-    },
-}
-
-export const savePreference = async (service: string, key: string, value: any) => {
-    try {
-        if (key == "phrase") {
-            preferences.phrases[service] = value;
-            await AsyncStorage.setItem("user_phrases", preferences.phrases.toString());
-        } else {
-            preferences.services[service][key] = value;
-           await AsyncStorage.setItem("user_services", preferences.services.toString());
-        }
-
-        return true;
-    } catch (e) {
-        alert("Error. Cannot save settings.")
-        return false;
-    }
-}
-
 
 export const sendAPIRequest = async (serviceItem) => {
     const item = serviceItem;
@@ -120,7 +76,7 @@ export const sendAPIRequest = async (serviceItem) => {
         let options : any = {
             method: item.api.method,
             headers: {
-                'X-RapidAPI-Key': RapidAPI_Key,
+                'X-RapidAPI-Key': RAPIDAPI_KEY,
                 'X-RapidAPI-Host': item.api.host
             }
         };
@@ -182,7 +138,54 @@ export const sendAPIRequest = async (serviceItem) => {
     } else {
         return Promise.reject<any>("Cannot find key "+item.key);
     }
+}
+export const preferences = {
+    services: {
+        astrology: {
+            daily_summary: true,
+            sign: {label: "capricorn", value: 0}
+        },
+        netflix: {
+            daily_summary: true,
+            category: {"label": "Both", value: 0}
+        },
+        youtube: {
+            daily_summary: true,
+            category: {label: "Now", value: 0},
+            country: {label: "US", value: 0},
+        },
+        weather: {
+            daily_summary: false
+        },
+        spotify: {
+            daily_summary: false,
+            playlist_id: "0SXwwegrQui5FwmQSaoNSM"
+        }
+    },
+    phrases: {
+        astrology: 'Astrology',
+        netflix: 'Netflix',
+        youtube: 'Youtube',
+        weather: 'Weather',
+        spotify: 'Music',
+    },
+}
 
+export const savePreference = async (service: string, key: string, value: any) => {
+    try {
+        if (key == "phrase") {
+            preferences.phrases[service] = value;
+            await AsyncStorage.setItem("user_phrases", preferences.phrases.toString());
+        } else {
+            preferences.services[service][key] = value;
+           await AsyncStorage.setItem("user_services", preferences.services.toString());
+        }
+
+        return true;
+    } catch (e) {
+        alert("Error. Cannot save settings.")
+        return false;
+    }
 }
 
 export default services;

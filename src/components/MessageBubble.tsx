@@ -2,7 +2,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { bubbleStyles } from '../assets/css/message';
-import { preferences } from '../env/services';
+import { preferences } from '../settings/services';
 
 const MessageBubble = ({ who, message }) => {
     var leftSpacer = who === 'bot' ? null : <View style={{width: 70}}/>;

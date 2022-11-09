@@ -2,6 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Default Settings
 var settings = {
+    apis: {
+        service_api: true,
+        dialogflow_api: true
+    },
+    clear: false,
     voice: {
         mute: false,
         volume: 1,

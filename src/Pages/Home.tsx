@@ -4,7 +4,6 @@ import { View, ScrollView, InteractionManager } from 'react-native';
 import Tts from 'react-native-tts';
 import {Dialogflow_V2} from 'react-native-dialogflow';
 
-import dialogflowConfig from '../env/dialogflow';
 import MessageBubble from '../components/MessageBubble';
 import SpeechBar from '../components/SpeechBar';
 import { globalStyles } from '../assets/css/global';
@@ -12,12 +11,12 @@ import AppBar from '../components/AppBar';
 // import { NavigationContainer } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
-import settings, { updateVoice } from '../env/settings';
-import services, { preferences, sendAPIRequest } from '../env/services';
+import settings, { updateVoice } from '../settings/globalsettings';
+import services, { preferences, sendAPIRequest } from '../settings/services';
 
 import LoadingScreen from '../components/LoadingScreen';
-import WeatherAPI from '../utils/WeatherAPI';
-import getFormattedService from '../env/formatter';
+import WeatherAPI from '../utils/fetch_weather_api';
+import getFormattedService from '../utils/formatter';
 
 type Message = {
   who: string,
@@ -70,12 +69,6 @@ export default function Home ({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      Dialogflow_V2.setConfiguration(
-        dialogflowConfig.client_email,
-        dialogflowConfig.private_key,
-        Dialogflow_V2.LANG_ENGLISH_US,
-        dialogflowConfig.project_id,
-      );
       loadConfiguration();
     }, [])
   );
@@ -155,28 +148,32 @@ export default function Home ({ navigation }) {
               }
               break;
             case settings.commands.Summary:
-              // handleGoogleResponse("Alright. Let me set things up.");
-              var output : any = false;
-              handleGoogleResponse("Alright. Let me set things up.");
-              Object(services).forEach((service) => {
-                var key = service.key ;
-                if (preferences.services[key].daily_summary == true) {
-                  output = true;
-                  if (key != "spotify" && key != "weather") {
-                    
-                    sendAPIRequest(service)
-                      .then(data => {
-                        handleGoogleResponse(getFormattedService(key, data))
-                      })
-                      .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+              if (settings.apis.service_api == true) {
+                var output : any = false;
+                handleGoogleResponse("Alright. Let me set things up.");
+                Object(services).forEach((service) => {
+                  var key = service.key ;
+                  if (preferences.services[key].daily_summary == true) {
+                    output = true;
+                    if (key != "spotify" && key != "weather") {
+                      
+                      sendAPIRequest(service)
+                        .then(data => {
+                          handleGoogleResponse(getFormattedService(key, data))
+                        })
+                        .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+                      }
                     }
-                  }
-              });
-              
-              if (output == true) {
-                handleGoogleResponse("All services summaries are disabled.");
+                });
+                
+                if (output == true) {
+                  handleGoogleResponse("All services summaries are disabled.");
+                }
+              } else {
+                handleGoogleResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
               }
               break;
+              
           }
 
           return;
@@ -185,23 +182,27 @@ export default function Home ({ navigation }) {
 
       Object(services).forEach((service) => {
         if (r == preferences.phrases[service.key].toLowerCase()) {
-          var key = service.key ;
-          isNormal = false;
-          if (service.key == "spotify") {
-            navigation.navigate("Player");
-          } else {
-            if (key != "spotify" && key != "weather") {
-              handleGoogleResponse("Alright, wait a second.")
-              sendAPIRequest(service)
-                .then(data => {
-                  console.log(key +" response data: ")
-                  console.log(data)
-                  handleGoogleResponse(getFormattedService(key, data))
-                })
-                .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+          if (settings.apis.service_api == true) {
+            var key = service.key ;
+            isNormal = false;
+            if (service.key == "spotify") {
+              navigation.navigate("Player");
             } else {
-              handleGoogleResponse("Sorry, these features are not implemented yet.")
+              if (key != "spotify" && key != "weather") {
+                handleGoogleResponse("Alright, wait a second.")
+                sendAPIRequest(service)
+                  .then(data => {
+                    console.log(key +" response data: ")
+                    console.log(data)
+                    handleGoogleResponse(getFormattedService(key, data))
+                  })
+                  .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+              } else {
+                handleGoogleResponse("Sorry, these features are not implemented yet.")
+              }
             }
+          } else {
+            handleGoogleResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
           }
         }
       });

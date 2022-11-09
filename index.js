@@ -1,13 +1,11 @@
 
-LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
-LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 /**
- * @format FUNCTION BASED
+ * Hiding some pointless logs
  */
 
-
-// import './src/Index';
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 /**
  * @format CLASS BASED

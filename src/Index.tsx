@@ -2,37 +2,69 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SettingsPage } from './Pages/Settings';
 import Home from './Pages/Home';
-import settings  from './env/settings';
+import settings  from './settings/globalsettings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
 
 import { AccentPage } from './Pages/Settings/Accent';
-import services, { preferences } from './env/services';
+import services, { dialogflowConfig, preferences } from './settings/services';
 import { Player } from './Pages/Player';
 import { ServiceSettings } from './Pages/Settings/ServiceSettings';
 import LoadingScreen from './components/LoadingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderBackButton } from '@react-navigation/elements';
-export default class Index extends React.Component {
-  state: { isLoaded: false }
+import { Dialogflow_V2 } from 'react-native-dialogflow';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { DIALOGFLOW_API_PRIVATE_KEY, RAPIDAPI_KEY } from "@env";
+// import { AppRegistry } from 'react-native';
 
-  constructor(props: any) {
-    super(props);
-    loadSettings(this);
-  }
 
-  render() {
+export default function Index() {
+  const [isLoaded, setLoaded] = useState(false)
+
+  useEffect(() => {
     SplashScreen.hide();
 
-    if (this.state && this.state.isLoaded) {
-      return <Navigation />;
+    var dialogflow_key = DIALOGFLOW_API_PRIVATE_KEY;
+    if (dialogflow_key != undefined) {
+      Dialogflow_V2.setConfiguration(
+        dialogflowConfig.client_email,
+        dialogflow_key!,
+        Dialogflow_V2.LANG_ENGLISH_US,
+        dialogflowConfig.project_id,
+      );
+      console.log("success")
+    } else {
+      settings.apis.dialogflow_api = false;
+      console.log("Speech was disabled for a good reason.")
     }
-    return <LoadingScreen />
+    
+    var services_apikey = RAPIDAPI_KEY;
+    if (services_apikey == undefined) {
+      settings.apis.service_api = false;
+      console.warn("Services are disabled for a good reason.")
+    } else {
+      console.log("success")
+    }
+
+    loadSettings().catch((e) => {
+      alert("Could not load settings! But that's alright. "+JSON.stringify(e))
+    }).finally(() => {
+      setLoaded(true)
+    });
+  }, [])
+
+  
+  if (isLoaded) {
+     return <Navigation />;
+  } else {
+    return <LoadingScreen  message = "Loading settings..." />
   }
 }
  
 const Stack = createStackNavigator();  
-export function Navigation() {
+function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName = "Home">
@@ -99,10 +131,8 @@ export function Navigation() {
   );
 };
 
-async function loadSettings(index : Index) {
-  try {
-    
-    await AsyncStorage.clear();
+async function loadSettings() {
+    // await AsyncStorage.clear();
     await AsyncStorage.getItem("mute").then((value) => {
       if(value !== null) {
           settings.voice.mute = eval(value);
@@ -143,10 +173,4 @@ async function loadSettings(index : Index) {
         }
       });
     });
-
-  } catch (e) {
-    alert("Loading data ERROR. "+JSON.stringify(e))
-  }
-
-  index.setState({"isLoaded": true})
 }

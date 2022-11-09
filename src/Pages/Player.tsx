@@ -22,7 +22,7 @@ import {
   PlayerState,
   Track
 } from 'react-native-spotify-remote';
-import { preferences } from '../env/services';
+import { preferences } from '../settings/services';
 import { Pressable } from 'react-native';
 import { useEffect } from 'react';
 import LoadingScreen from '../components/LoadingScreen';

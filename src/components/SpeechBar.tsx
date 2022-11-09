@@ -18,7 +18,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import {BoxShadow} from 'react-native-shadow';
 import Tts from 'react-native-tts';
-import settings from '../env/settings';
+import settings from '../settings/globalsettings';
 import AudioBox from './AudioBox';
 
 type Props = {
@@ -85,9 +85,7 @@ class SpeechBar extends Component<Props, State> {
             Tts.stop();
         
             this.setState({
-                started: true,
-                // error: '',
-                // result: '',
+                started: true
             });
         } catch (e) {
             console.error(e);
@@ -159,7 +157,7 @@ class SpeechBar extends Component<Props, State> {
                     {/* <Text>{this.state.state}</Text> */}
 
                 <View style={speechBarStyles.button} >
-                    <TouchableOpacity onPress={() => { this.handleSpeech() }}  >
+                    <TouchableOpacity onPress={() => { this.handleSpeech() }} disabled = {!settings.apis.dialogflow_api}  >
                         <FontAwesomeIcon name="microphone" size={30} style={ this.state.started == true? [speechBarStyles.microphone, speechBarStyles.microphoneActive]: speechBarStyles.microphone} />
                     </TouchableOpacity>
                 </View>

@@ -6,7 +6,7 @@ import { AppRegistry, Text, View } from 'react-native';
 import Tts, { Voice } from 'react-native-tts';
 import { useFocusEffect } from '@react-navigation/native';
 import SettingsList from 'react-native-settings-list'
-import settings, { updateVoice } from '../../env/settings';
+import settings, { updateVoice } from '../../settings/globalsettings';
 import { ScrollView } from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
 

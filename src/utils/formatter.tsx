@@ -1,4 +1,4 @@
-import { preferences } from "./services";
+import { preferences } from "../settings/services";
 
 const getFormattedService = (key, data) => {
     switch (key) {
