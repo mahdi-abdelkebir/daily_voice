@@ -51,6 +51,15 @@ Here are a few pictures:
 - Summary: Gives an overall summary of all your API output.
 - Settings: Opens settings menu
 
+# Services available:
+
+- [X] Astrology News (by sign)
+- [X] Netflix Top Series/Movies (both or only one of them)
+- [X] Youtube Trending (By country, by category (gaming, music, movies))
+- [] Weather 
+- [] Spotify
+
+You can choose
 # Other fonctionalities:
 
 Other than voice messaging for your API outputs, you can set specific API parameters from the Settings menu, set which will summarize on 'Summary'. I also used quite a bit of time to make it easier to add new APIs for possible future usage. 
