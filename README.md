@@ -20,13 +20,25 @@ Here are a few pictures:
   <tr style="padding: 0">
     <!-- GitHub Stats Card -->  
     <td valign="top">
-        <img src="./pictures/pic1.PNG" /> 
+        <img src="./screenshots/pic1.jpg" /> 
     </td>
     <td valign="top">
-        <img src="./pictures/pic2.png"  /> 
+        <img src="./screenshots/pic2.jpg"  /> 
      </td>
      <td valign="top">
-        <img src="./pictures/pic3.png"  /> 
+        <img src="./screenshots/pic3.jpg"  /> 
+     </td>
+  </tr>
+</table>
+
+<table cellpadding="0">
+  <tr style="padding: 0">
+    <!-- GitHub Stats Card -->  
+    <td valign="top">
+        <img src="./screenshots/pic4.jpg" /> 
+    </td>
+    <td valign="top">
+        <img src="./screenshots/pic5.jpg"  /> 
      </td>
   </tr>
 </table>
