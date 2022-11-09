@@ -56,8 +56,8 @@ Here are a few pictures:
 - [X] Astrology News (by sign)
 - [X] Netflix Top Series/Movies (both or only one of them)
 - [X] Youtube Trending (By country, by category (gaming, music, movies))
-- [] Weather 
-- [] Spotify
+- [ ] Weather 
+- [ ] Spotify
 
 You can choose
 # Other fonctionalities:
