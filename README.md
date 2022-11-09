@@ -59,6 +59,8 @@ Here are a few pictures:
 - [ ] Weather 
 - [ ] Spotify
 
+You can select a phrase to trigger which service (maybe mutiple at same time).
+
 # Other fonctionalities:
 
 Other than voice messaging for your API outputs, you can set specific API parameters from the Settings menu, set which will summarize on 'Summary'. I also used quite a bit of time to make it easier to add new APIs for possible future usage. 
