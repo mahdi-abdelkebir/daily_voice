@@ -188,4 +188,21 @@ export const savePreference = async (service: string, key: string, value: any) =
     }
 }
 
+// TODO: add to service?
+export const astrology_signs = [
+    { label: "Aries", value : 0},  { label: "Taurus", value : 1},  { label: "Gemini", value : 2},  { label: "Cancer", value : 3},  { label: "Leo", value : 4},  { label: "Virgo", value : 5}, { label: "Libra", value : 6}, { label: "Scorpio", value : 7}, { label: "Sagittarius", value : 8}, { label: "Capricorn", value : 9}, { label: "Aquarius", value : 10}, { label: "Pisces", value : 11}
+];
+
+export const youtube_categories = [
+    { label: "All", value : 0},  { label: "Music", value : 1},  { label: "Movies", value : 2}, { label: "Gaming", value : 3}
+];
+
+export const countries_codes = [
+    { label: "US", value : 0},  { label: "TN", value : 1},  { label: "FR", value : 2}, { label: "TK", value : 3}
+];
+
+export const netflix_categories = [
+    { label: "Both", value : 0},  { label: "Movie Only", value : 1},  { label: "Series Only", value : 2}
+];
+
 export default services;

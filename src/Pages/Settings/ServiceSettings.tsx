@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Form, FormItem, Picker } from 'react-native-form-component';
 import SettingsList from 'react-native-settings-list';
-import { preferences, savePreference } from '../../settings/services';
+import { astrology_signs, netflix_categories, preferences, savePreference, youtube_categories, countries_codes } from '../../settings/services';
 import LoadingScreen from '../../components/LoadingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -85,7 +85,7 @@ export function ServiceSettings({ route, navigation }) {
                         type="modal"
                         selectedValueStyle={{marginLeft:10}}
                         labelStyle={{marginTop:20, marginBottom:1, "fontSize": 15, marginLeft:10, color: "grey"}}
-                        items={ astrologyList }
+                        items={ astrology_signs }
                         label="Pick a sign"
                         selectedValue={item.sign.value}
                         onSelection={(newItem) => setAstrology(newItem)}
@@ -97,7 +97,7 @@ export function ServiceSettings({ route, navigation }) {
                         type="modal"
                         selectedValueStyle={{marginLeft:10}}
                         labelStyle={{marginTop:20, marginBottom:10, "fontSize": 15, marginLeft:10, color: "grey"}}
-                        items={ categoryList }
+                        items={ youtube_categories }
                         label="Pick a category"
                         selectedValue={item.category.value}
                         onSelection={(newItem) => setCategory(newItem)}
@@ -106,7 +106,7 @@ export function ServiceSettings({ route, navigation }) {
                         type="modal"
                         selectedValueStyle={{marginLeft:10}}
                         labelStyle={{marginBottom:1, "fontSize": 15, marginLeft:10, color: "grey"}}
-                        items={ countryList }
+                        items={ countries_codes }
                         label="Pick a country"
                         selectedValue={item.country.value}
                         onSelection={(newItem) => setCountry(newItem)}
@@ -118,7 +118,7 @@ export function ServiceSettings({ route, navigation }) {
                         type="modal"
                         selectedValueStyle={{marginLeft:10}}
                         labelStyle={{marginTop:20, marginBottom:1, "fontSize": 15, marginLeft:10, color: "grey"}}
-                        items={ catalogueList }
+                        items={ netflix_categories }
                         label="Pick a category"
                         selectedValue={item.category.value}
                         onSelection={(newItem) => setCategory(newItem)}
@@ -219,21 +219,3 @@ const styles = StyleSheet.create({
 
 
 AppRegistry.registerComponent('Service Settings', () => ServiceSettings);
-
-
-// TODO: add to service?
-const astrologyList = [
-    { label: "Aries", value : 0},  { label: "Taurus", value : 1},  { label: "Gemini", value : 2},  { label: "Cancer", value : 3},  { label: "Leo", value : 4},  { label: "Virgo", value : 5}, { label: "Libra", value : 6}, { label: "Scorpio", value : 7}, { label: "Sagittarius", value : 8}, { label: "Capricorn", value : 9}, { label: "Aquarius", value : 10}, { label: "Pisces", value : 11}
-];
-
-const categoryList = [
-    { label: "All", value : 0},  { label: "Music", value : 1},  { label: "Movies", value : 2}, { label: "Gaming", value : 3}
-];
-
-const countryList = [
-    { label: "US", value : 0},  { label: "TN", value : 1},  { label: "FR", value : 2}, { label: "TK", value : 3}
-];
-
-const catalogueList = [
-    { label: "Both", value : 0},  { label: "Movie Only", value : 1},  { label: "Series Only", value : 2}
-];
