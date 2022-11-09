@@ -3,7 +3,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const RapidAPI_Key = "08451ee546msh6e596aac72cf34ep12e58cjsn7d9b32e40368";
+const RapidAPI_Key = "08451ee546msh---12e58cjsn7d9b32e40368";
 
 const services : any[] = [ // must be ordered exactly like voice command in settings!!
     // apis with real links
