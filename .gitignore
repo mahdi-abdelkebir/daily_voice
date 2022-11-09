@@ -4,6 +4,8 @@
 
 # Xcode
 #
+
+.env
 build/
 *.pbxuser
 !default.pbxuser
@@ -21,7 +23,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 ios/.xcode.env.local
-.env
+
 # Android/IntelliJ
 #
 build/
