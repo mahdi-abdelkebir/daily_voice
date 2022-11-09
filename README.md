@@ -48,7 +48,7 @@ Here are a few pictures:
 
 - Shut Up: will mute bot
 - Speak: Unmute bot
-- Summary: Gives an overall summary of all your API output.
+- Summary: Gives an overall summary of all your APIs output.
 - Settings: Opens settings menu
 
 # Services available:
@@ -59,7 +59,6 @@ Here are a few pictures:
 - [ ] Weather 
 - [ ] Spotify
 
-You can choose
 # Other fonctionalities:
 
 Other than voice messaging for your API outputs, you can set specific API parameters from the Settings menu, set which will summarize on 'Summary'. I also used quite a bit of time to make it easier to add new APIs for possible future usage. 
