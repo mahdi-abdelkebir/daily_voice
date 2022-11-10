@@ -73,7 +73,7 @@ Here are a few pictures:
 - [X] Netflix Top Series/Movies (both or only one of them)
 - [X] Youtube Trending (By country, by category (gaming, music, movies, all))
 - [X] Weather (current location, will ask for permission)
-- [ ] Spotify
+- [ ] Spotify Play
 
 You can select a phrase to trigger which service (maybe mutiple at same time).
 
