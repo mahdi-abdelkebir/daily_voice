@@ -160,7 +160,7 @@ export default function Home ({ navigation }) {
                         .then(data => {
                           handleGoogleResponse(getFormattedService(key, data))
                         })
-                        .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+                        .catch(err => handleGoogleResponse("Error ("+service.title+"): "+err));
                       }
                     }
                 });
@@ -195,7 +195,7 @@ export default function Home ({ navigation }) {
                     console.log(data)
                     handleGoogleResponse(getFormattedService(key, data))
                   })
-                  .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+                  .catch(err => handleGoogleResponse("Error ("+service.title+"): "+err));
               } else {
                 handleGoogleResponse("Sorry, this feature ("+ service.title +") are not implemented yet.")
               }

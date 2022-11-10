@@ -40,9 +40,25 @@ Here are a few pictures:
     <td valign="top">
         <img src="./screenshots/pic5.jpg"  /> 
      </td>
+    <td valign="top">
+        <img src="./screenshots/pic6.jpg"  /> 
+     </td>
   </tr>
 </table>
 
+# First versions was like:
+
+<table cellpadding="0">
+  <tr style="padding: 0">
+    <!-- GitHub Stats Card -->  
+    <td valign="top">
+        <img src="./screenshots/v1_pic1.jpg" /> 
+    </td>
+    <td valign="top">
+        <img src="./screenshots/v1_pic2.jpg"  /> 
+     </td>
+  </tr>
+</table>
 
 # Voice Commands: 
 
@@ -56,7 +72,7 @@ Here are a few pictures:
 - [X] Astrology News (by sign)
 - [X] Netflix Top Series/Movies (both or only one of them)
 - [X] Youtube Trending (By country, by category (gaming, music, movies, all))
-- [ ] Weather 
+- [X] Weather 
 - [ ] Spotify
 
 You can select a phrase to trigger which service (maybe mutiple at same time).
@@ -67,6 +83,7 @@ Other than voice messaging for your API outputs, you can set specific API parame
 
 
 Alright. This project is still a jade being sharpened. I had fun despite all of my frustrations, so thanks for the opportunity (to the competition administration)!
+
 
 
 
