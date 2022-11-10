@@ -91,8 +91,7 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
   function getWeatherInfo(info) {
     var data : showWeather = info; 
     if (data != undefined) {
-      return  `Buckle up. The current weather in ${data.name} is '${data.description}', with a humidity value of ${data.humidity} and 
-wind speed of ${data.wind}.`
+      return  `Buckle up. The current weather in ${data.name} is '${data.description}', with a humidity value of ${data.humidity} and wind speed of ${data.wind}.`
     } else {
       return  "Cannot get any weather data from the internet. Please enable your permissions first or try again later.";
     }
