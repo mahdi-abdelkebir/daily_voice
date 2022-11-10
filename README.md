@@ -48,17 +48,25 @@ Here are a few pictures:
 
 - Shut Up: will mute bot
 - Speak: Unmute bot
-- Summary: Gives an overall summary of all your API output.
+- Summary: Gives an overall summary of all your APIs output.
 - Settings: Opens settings menu
+
+# Services available:
+
+- [X] Astrology News (by sign)
+- [X] Netflix Top Series/Movies (both or only one of them)
+- [X] Youtube Trending (By country, by category (gaming, music, movies, all))
+- [ ] Weather 
+- [ ] Spotify
+
+You can select a phrase to trigger which service (maybe mutiple at same time).
 
 # Other fonctionalities:
 
 Other than voice messaging for your API outputs, you can set specific API parameters from the Settings menu, set which will summarize on 'Summary'. I also used quite a bit of time to make it easier to add new APIs for possible future usage. 
 
-Note to self: You start your search in the env folder in src. Also please move the environement variables and API authentification tokens to the server-side, any user can see them!
 
-
-Alright. This is an imperfect project. But I had fun noneless, so thanks for the opportunity (to the competition administration)!
+Alright. This project is still a jade being sharpened. I had fun despite all of my frustrations, so thanks for the opportunity (to the competition administration)!
 
 
 
