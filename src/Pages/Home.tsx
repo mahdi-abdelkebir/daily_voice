@@ -11,12 +11,12 @@ import AppBar from '../components/AppBar';
 // import { NavigationContainer } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
-import settings, { updateVoice } from '../settings/globalsettings';
-import services, { preferences, sendAPIRequest } from '../settings/services';
+import settings, { updateVoice } from '../settings';
+import services, { preferences, sendAPIRequest } from '../Services/services';
 
 import LoadingScreen from '../components/LoadingScreen';
-import WeatherAPI from '../utils/fetch_weather_api';
-import getFormattedService from '../utils/formatter';
+import getFormattedService from '../utils/api_formatter';
+import { getWeatherInfo } from '../Services/weatherapi';
 
 type Message = {
   who: string,
@@ -54,7 +54,7 @@ export default function Home ({ navigation }) {
         setIsInit(false);
         InteractionManager.runAfterInteractions(() => {
           setIsReady(true)
-        }).then(() => {
+        }).then(async () => {
             handleGoogleResponse("Hello user, what do you want to know about today?");
         });
       } else {
@@ -102,18 +102,18 @@ export default function Home ({ navigation }) {
   }
 
 
-  function test() {
-    Object(services).forEach(async (service) => {
-        var key = service.key ;
-        if (key != "spotify" && key != "weather") {
-          sendAPIRequest(service)
-            .then(data => {
-              handleGoogleResponse(key+" "+getFormattedService(key, data))
-            })
-            .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
-          }
-      });
-  }
+  // function test() {
+  //   Object(services).forEach(async (service) => {
+  //       var key = service.key ;
+  //       if (key != "spotify" && key != "weather") {
+  //         sendAPIRequest(service)
+  //           .then(data => {
+  //             handleGoogleResponse(key+" "+getFormattedService(key, data))
+  //           })
+  //           .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
+  //         }
+  //     });
+  // }
 
   function handleUserRequest(result : string | null) {
     if (result != null) {
@@ -151,13 +151,12 @@ export default function Home ({ navigation }) {
               if (settings.apis.service_api == true) {
                 var output : any = false;
                 handleGoogleResponse("Alright. Let me set things up.");
-                Object(services).forEach((service) => {
+                Object(services).forEach(async (service) => {
                   var key = service.key ;
                   if (preferences.services[key].daily_summary == true) {
                     output = true;
-                    if (key != "spotify" && key != "weather") {
-                      
-                      sendAPIRequest(service)
+                    if (key != "spotify") {
+                      request(service)
                         .then(data => {
                           handleGoogleResponse(getFormattedService(key, data))
                         })
@@ -180,17 +179,17 @@ export default function Home ({ navigation }) {
         }
       }
 
-      Object(services).forEach((service) => {
+      Object(services).forEach(async (service) => {
         if (r == preferences.phrases[service.key].toLowerCase()) {
           if (settings.apis.service_api == true) {
             var key = service.key ;
             isNormal = false;
-            if (service.key == "spotify") {
-              navigation.navigate("Player");
-            } else {
-              if (key != "spotify" && key != "weather") {
+            // if (service.key == "spotify") {
+            //   navigation.navigate("Player");
+            // } else {
+              if (key != "spotify") {
                 handleGoogleResponse("Alright, wait a second.")
-                sendAPIRequest(service)
+                request(service)
                   .then(data => {
                     console.log(key +" response data: ")
                     console.log(data)
@@ -198,9 +197,9 @@ export default function Home ({ navigation }) {
                   })
                   .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
               } else {
-                handleGoogleResponse("Sorry, these features are not implemented yet.")
+                handleGoogleResponse("Sorry, this feature ("+ service.title +") are not implemented yet.")
               }
-            }
+            // }
           } else {
             handleGoogleResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
           }
@@ -212,11 +211,11 @@ export default function Home ({ navigation }) {
     }
   }
 
-  function request(service : string, index : number) {
-    if (service == "weather") {
-      return WeatherAPI();
+  async function request(service) {
+    if (service.key == "weather") {
+      return await getWeatherInfo();
     } else {
-      return sendAPIRequest(index);
+      return await sendAPIRequest(service);
     }
   }
 

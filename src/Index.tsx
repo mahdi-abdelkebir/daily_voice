@@ -2,25 +2,25 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SettingsPage } from './Pages/Settings';
 import Home from './Pages/Home';
-import settings  from './settings/globalsettings';
+import settings  from './settings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
 
 import { AccentPage } from './Pages/Settings/Accent';
-import services, { dialogflowConfig, preferences } from './settings/services';
-import { Player } from './Pages/Player';
+import services, { dialogflowConfig, preferences } from './Services/services';
+import { SpotifyPlayer } from './Pages/SpotifyPlayer';
 import { ServiceSettings } from './Pages/Settings/ServiceSettings';
 import LoadingScreen from './components/LoadingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderBackButton } from '@react-navigation/elements';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DIALOGFLOW_API_PRIVATE_KEY, RAPIDAPI_KEY } from "@env";
 // import { AppRegistry } from 'react-native';
-
+import useSWR from "swr";
 
 export default function Index() {
+  // const { data, error } = useSWR("/api/peopl");
   const [isLoaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Index() {
       console.log("success")
     } else {
       settings.apis.dialogflow_api = false;
-      console.log("Speech was disabled for a good reason.")
+      console.warn("Speech was disabled for a good reason.")
     }
     
     var services_apikey = RAPIDAPI_KEY;
@@ -105,7 +105,7 @@ function Navigation() {
 
       <Stack.Screen 
           name="Player" 
-          component={Player} 
+          component={SpotifyPlayer} 
           options={{ 
             headerTintColor: "white",
             headerStyle: {

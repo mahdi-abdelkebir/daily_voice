@@ -1,4 +1,7 @@
-import { preferences } from "../settings/services";
+import { preferences } from "../Services/services";
+import { showWeather } from 'react-native-weather-api';
+import React from "react";
+
 
 const getFormattedService = (key, data) => {
     switch (key) {
@@ -9,7 +12,7 @@ const getFormattedService = (key, data) => {
       case "netflix": 
         return getNetflix(data);
       case "weather":
-        return getWeather(data);
+        return getWeatherInfo(data);
       default:
         return "Service with key "+key +" is not formatted yet!";
     }
@@ -85,8 +88,14 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
     return str;
   }
   
-  function getWeather(data) {
-    return ``;
+  function getWeatherInfo(info) {
+    var data : showWeather = info; 
+    if (data != undefined) {
+      return  `Buckle up. The current weather in ${data.name} is '${data.description}', with a humidity value of ${data.humidity} and 
+wind speed of ${data.wind}.`
+    } else {
+      return  "Cannot get any weather data from the internet. Please enable your permissions first or try again later.";
+    }
   }
 
 

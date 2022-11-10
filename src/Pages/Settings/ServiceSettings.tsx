@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Form, FormItem, Picker } from 'react-native-form-component';
 import SettingsList from 'react-native-settings-list';
-import { astrology_signs, netflix_categories, preferences, savePreference, youtube_categories, countries_codes } from '../../settings/services';
+import { astrology_signs, netflix_categories, preferences, savePreference, youtube_categories, countries_codes } from '../../Services/services';
 import LoadingScreen from '../../components/LoadingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

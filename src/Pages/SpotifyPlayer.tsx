@@ -22,42 +22,45 @@ import {
   PlayerState,
   Track
 } from 'react-native-spotify-remote';
-import { preferences } from '../settings/services';
+import { preferences } from '../Services/services';
 import { Pressable } from 'react-native';
 import { useEffect } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
+import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URL, SPOTIFY_TOKEN_REFRESH_URL, SPOTIFY_TOKEN_SWAP_URL } from '@env';
 
   // Api Config object, replace with your own applications client id and urls
-const spotifyConfig: ApiConfig = {
-  clientID: "575c34aa09c54aa1a13f39710652c82d",
-  redirectURL: "localhost:8080",
-  scopes: [ApiScope.AppRemoteControlScope, ApiScope.UserFollowReadScope]
-}
-
-
-export function Player(props) {
-  const [isPaused, setPaused] = React.useState(false);
-  const [isShuffling, setShuffling] = React.useState(false);
-  const [currentPosition, setPosition] = React.useState(0);
-  const [onRepeat, setRepeat] = React.useState(0);
-  const [track, setTrack] = React.useState<Track>();
+  const spotifyConfig: ApiConfig = {
+    clientID: SPOTIFY_CLIENT_ID,
+    redirectURL: SPOTIFY_REDIRECT_URL,
+    tokenRefreshURL: SPOTIFY_TOKEN_REFRESH_URL,
+    tokenSwapURL: SPOTIFY_TOKEN_SWAP_URL,
+    scopes: [ApiScope.AppRemoteControlScope, ApiScope.UserFollowReadScope]
+  }
   
-  async function loadSession() {
-    try{
-      const session = await SpotifyAuth.authorize(spotifyConfig);
-      await SpotifyRemote.connect(session.accessToken);
-      await SpotifyRemote.playUri("spotify:playlist:"+preferences.services.spotify.playlist_id);
-        // await SpotifyRemote.seek(58000);
-      SpotifyRemote.addListener("playerStateChanged", (v : PlayerState) => {
-        setTrack(v.track);
-        setPosition(v.playbackPosition);
+  
+  export function SpotifyPlayer(props) {
+    const [isPaused, setPaused] = React.useState(false);
+    const [isShuffling, setShuffling] = React.useState(false);
+    const [currentPosition, setPosition] = React.useState(0);
+    const [onRepeat, setRepeat] = React.useState(0);
+    const [track, setTrack] = React.useState<Track>();
+    
+    async function loadSession() {
+      try{
+        const session = await SpotifyAuth.authorize(spotifyConfig);
+        await SpotifyRemote.connect(session.accessToken);
+        await SpotifyRemote.playUri("spotify:playlist:"+preferences.services.spotify.playlist_id);
+          // await SpotifyRemote.seek(58000);
+        SpotifyRemote.addListener("playerStateChanged", (v : PlayerState) => {
+          setTrack(v.track);
+          setPosition(v.playbackPosition);
       })
 
-    } catch(err) {
-      alert("Couldn't authorize with or connect to Spotify "+err);
-      // props.navigation.navigate("Home");
-    }   
-  }
+      } catch(err) {
+        props.navigation.navigate("Home");
+        alert("Couldn't authorize with or connect to Spotify "+err);
+      }   
+    }
 
   useFocusEffect(
     useCallback(() => {

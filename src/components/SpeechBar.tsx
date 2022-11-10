@@ -18,7 +18,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import {BoxShadow} from 'react-native-shadow';
 import Tts from 'react-native-tts';
-import settings from '../settings/globalsettings';
+import settings from '../settings';
 import AudioBox from './AudioBox';
 
 type Props = {
