@@ -62,7 +62,8 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
     var str = "";
     
     function render(data, type) {
-      var arrayString = `- ${type}: `
+      var arrayString = `
+      - ${type}: `
       for (const item of data) {
         arrayString += `
   ${item.list}.  '${item.name}', viewed ${item.hoursviewed} times. 
@@ -73,7 +74,9 @@ Harmony: Your most compatible sign today is ${data["compatibility"]}, your lucky
     }
 
     if (data.series != null || data.movies != null) {
-      str = `In your weekly Netflix top 10, you have:`;
+      str = `In your weekly Netflix top 10, you have:
+      `;
+
       if (data.series != null) {
         str += render(data.series, "Series")
       } 

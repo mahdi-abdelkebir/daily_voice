@@ -4,12 +4,6 @@
 import { RAPIDAPI_KEY } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const dialogflowConfig ={
-    "type": "service_account",
-    "project_id": "small-talk-eprc",
-    "client_email": "testclt@small-talk-eprc.iam.gserviceaccount.com",
-}
-
 const services : any[] = [ // must be ordered exactly like voice command in settings!!
     // apis with real links
     {
@@ -67,7 +61,6 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
 ];
 
 
-
 export const sendAPIRequest = async (serviceItem) => {
     const item = serviceItem;
 
@@ -81,7 +74,7 @@ export const sendAPIRequest = async (serviceItem) => {
             }
         };
         
-        function sendRequest(link) {
+        const sendRequest = (link)  => {
             var newLink = "https://"+link+params;
             console.log(newLink);
             return fetch(newLink, options)
@@ -89,7 +82,6 @@ export const sendAPIRequest = async (serviceItem) => {
                 var json = response.json()
                 return json
             })
-
         }
 
         // return Promise.resolve("test");
@@ -107,18 +99,18 @@ export const sendAPIRequest = async (serviceItem) => {
                 var r = {movies: null, series: null};
                 var idCategory = preferences.services.netflix.category.value;
                 switch (idCategory) {
-                    case 0: // TODO/ optimize LATER
+                    case 0: // both
                         await sendRequest(item.api.host + item.api.routes[0].path).
                         then((response) => {
                             r.movies = response;
                         });
 
-                        await sendRequest(item.api.host + item.api.routes[0].path).
+                        await sendRequest(item.api.host + item.api.routes[1].path).
                         then((response) => {
                             r.series = response;
                         });
                         break;
-                    case 1: // both
+                    case 1: // movies
                         await sendRequest(item.api.host + item.api.routes[0].path).
                         then((response) => {
                             r.movies = response;

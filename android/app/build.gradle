@@ -140,6 +140,9 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
+        manifestPlaceholders = [
+            appAuthRedirectScheme: "io.identityserver.demo"
+        ]
         applicationId "com.chatbot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

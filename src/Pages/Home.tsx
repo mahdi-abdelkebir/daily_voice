@@ -1,6 +1,6 @@
 
 import React, {useCallback, useEffect, useRef} from 'react';
-import { View, ScrollView, InteractionManager } from 'react-native';
+import { View, ScrollView, InteractionManager, Pressable } from 'react-native';
 import Tts from 'react-native-tts';
 import {Dialogflow_V2} from 'react-native-dialogflow';
 
@@ -9,7 +9,7 @@ import SpeechBar from '../components/SpeechBar';
 import { globalStyles } from '../assets/css/global';
 import AppBar from '../components/AppBar';
 // import { NavigationContainer } from '@react-navigation/native';
-import { useFocusEffect } from '@react-navigation/native';
+import { Link, useFocusEffect } from '@react-navigation/native';
 
 import settings, { updateVoice } from '../settings';
 import services, { preferences, sendAPIRequest } from '../Services/services';
@@ -24,7 +24,6 @@ type Message = {
 }
 
 export default function Home ({ navigation }) {
-  const [isInit, setIsInit] = React.useState(true);
   const [isReady, setIsReady] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [isMuted, setMuted] = React.useState<boolean>(settings.voice.mute);
@@ -37,9 +36,15 @@ export default function Home ({ navigation }) {
       var accentId = settings.voice.accentId;
       if (accentId != '') {
         Tts.setDefaultVoice(accentId).catch(e => {
-          alert("voice not found. "+accentId)
+          alert("Voice not found. "+accentId)
         });
       }
+
+      // fetch("http://192.168.1.7:3000/").then((v) => {
+      //     alert(JSON.stringify(v))
+      // }).catch((e) => {
+      //     alert(e)
+      // });
 
       if (isMuted != settings.voice.mute) { 
         setMuted(settings.voice.mute);
@@ -50,12 +55,16 @@ export default function Home ({ navigation }) {
         settings.clear = false;
       }
     }).then(() => {
-      if (isInit == true) {
-        setIsInit(false);
+      if (settings.init == true) {
+        settings.init = false;
+
         InteractionManager.runAfterInteractions(() => {
           setIsReady(true)
         }).then(async () => {
-            handleGoogleResponse("Hello user, what do you want to know about today?");
+            if (settings.first_time) {
+
+            }
+            handleGoogleResponse("Welcome back, what do you want to know about today?");
         });
       } else {
         setIsReady(true)
@@ -77,10 +86,14 @@ export default function Home ({ navigation }) {
   function getResponse(msg: string) {    
     Dialogflow_V2.requestQuery(msg, 
       (result:any)=> {
-        if (result.queryResult)
-          handleGoogleResponse(result.queryResult.fulfillmentMessages[0].text.text[0])
-        else {
-          alert(result.error.code+" - "+result.error.status)
+        try {
+          // if (result.queryResult.fulfillmentText)
+          // if (result.queryResult.fulfillmentMessages[0])
+          //   handleGoogleResponse(result.queryResult.fulfillmentMessages[0].text.text[0])
+          // else
+            handleGoogleResponse(result.queryResult.fulfillmentText)
+        } catch (e) {
+          alert(e+" - "+JSON.stringify(result))
         }
       }, 
       error=> handleGoogleResponse("Error. "+error.message),
@@ -224,6 +237,12 @@ export default function Home ({ navigation }) {
     updateVoice("mute", muted);
     setMuted(muted);
   };
+
+  function repeatThis(item : Message) {
+    if (item.who == "bot") {
+      Tts.speak(item.msg);
+    }
+  };
   // muteHandle(isMuted) {
     
   //   if (isMuted) {
@@ -252,7 +271,10 @@ export default function Home ({ navigation }) {
             <View style={{height: 10}}/> 
               {
                 messages.map(function(item, index) {
-                    return <MessageBubble key = {index} who={item.who} message={item.msg} />
+                    return (
+                    <Pressable key = {index} onLongPress={() => { repeatThis(item) }}  >
+                        <MessageBubble who={item.who} message={item.msg} />
+                    </Pressable>);
                 })
               }
               <View style={{height: 5}}/> 

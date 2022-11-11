@@ -7,34 +7,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
 
 import { AccentPage } from './Pages/Settings/Accent';
-import services, { dialogflowConfig, preferences } from './Services/services';
+import services, { preferences } from './Services/services';
 import { SpotifyPlayer } from './Pages/SpotifyPlayer';
 import { ServiceSettings } from './Pages/Settings/ServiceSettings';
 import LoadingScreen from './components/LoadingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderBackButton } from '@react-navigation/elements';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
-import { useEffect, useState } from 'react';
-import { DIALOGFLOW_API_PRIVATE_KEY, RAPIDAPI_KEY } from "@env";
+import { useEffect, useState, useCallback } from 'react';
+import { DIALOGFLOW_API_CLIENT_EMAIL, DIALOGFLOW_API_PRIVATE_KEY, DIALOGFLOW_API_PROJECT_ID, RAPIDAPI_KEY } from "@env";
 // import { AppRegistry } from 'react-native';
-import useSWR from "swr";
 
 export default function Index() {
   // const { data, error } = useSWR("/api/peopl");
-  const [isLoaded, setLoaded] = useState(false)
+  const [isLoaded, setLoaded] = useState(false);
+  const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
+    loadConfig();
+  }, [])
+
+  async function loadConfig() {
     SplashScreen.hide();
 
+    setMessage("Loading settings...")
+    await loadSettings().catch(() => {
+      settings.first_time = true;
+    });
+
+    setMessage("Loading the main services...")
     var dialogflow_key = DIALOGFLOW_API_PRIVATE_KEY;
-    if (dialogflow_key != undefined) {
+    if (dialogflow_key != undefined && DIALOGFLOW_API_CLIENT_EMAIL && DIALOGFLOW_API_PROJECT_ID) {
       Dialogflow_V2.setConfiguration(
-        dialogflowConfig.client_email,
+        DIALOGFLOW_API_CLIENT_EMAIL,
         dialogflow_key!,
-        Dialogflow_V2.LANG_ENGLISH_US,
-        dialogflowConfig.project_id,
+        Dialogflow_V2.LANG_ENGLISH,
+        DIALOGFLOW_API_PROJECT_ID,
       );
-      console.log("success")
+      console.log("DialogFlow was loaded successfully")
     } else {
       settings.apis.dialogflow_api = false;
       console.warn("Speech was disabled for a good reason.")
@@ -45,21 +55,22 @@ export default function Index() {
       settings.apis.service_api = false;
       console.warn("Services are disabled for a good reason.")
     } else {
-      console.log("success")
+      console.log("RAPIDAPI was loaded successfully")
     }
 
-    loadSettings().catch((e) => {
-      alert("Could not load settings! But that's alright. "+JSON.stringify(e))
-    }).finally(() => {
-      setLoaded(true)
-    });
-  }, [])
 
-  
+    if (settings.first_time == false) {
+      setMessage("Loading user preferences...")
+      await loadPreferences();
+    }
+
+    setLoaded(true);
+  }
+
   if (isLoaded) {
-     return <Navigation />;
+     return <Navigation/>;
   } else {
-    return <LoadingScreen  message = "Loading settings..." />
+    return <LoadingScreen  message = {message} />
   }
 }
  
@@ -104,7 +115,7 @@ function Navigation() {
         />
 
       <Stack.Screen 
-          name="Player" 
+          name="Spotify" 
           component={SpotifyPlayer} 
           options={{ 
             headerTintColor: "white",
@@ -131,46 +142,32 @@ function Navigation() {
   );
 };
 
+
 async function loadSettings() {
+  return AsyncStorage.getItem("app_voice_settings").then((value) => {
+    if(value !== null) {
+        settings.voice = JSON.parse(value); // phrase
+    }
+  })
+}
+
+async function loadPreferences() {
     // await AsyncStorage.clear();
-    await AsyncStorage.getItem("mute").then((value) => {
-      if(value !== null) {
-          settings.voice.mute = eval(value);
-      }
-    });
 
-    await AsyncStorage.getItem("volume").then((value) => {
+    await AsyncStorage.getItem("user_services").then((value) => {
       if(value !== null) {
-          settings.voice.volume = eval(value);
+          preferences.services = JSON.parse(value); // phrase
       }
+    }).catch(() => {
+      console.warn("User service preferences are missing.")
     });
-
-    await AsyncStorage.getItem("languageId").then((value) => {
+  // });:
+  
+    await AsyncStorage.getItem("user_phrases").then((value) => {
       if(value !== null) {
-          settings.voice.languageId = value;
+        preferences.phrases = JSON.parse(value); // phrase
       }
-    });
-
-    await AsyncStorage.getItem("accentId").then((value) => {
-      if(value !== null) {
-          settings.voice.accentId = value;
-      }
-    });
-
-    // getting phrases
-    Object.keys(services).forEach(async () => {
-      await AsyncStorage.getItem("user_services").then((value) => {
-        if(value !== null) {
-            preferences.services = JSON.parse(value); // phrase
-        }
-      });
-    });
-    
-    Object.keys(services).forEach(async () => {
-      await AsyncStorage.getItem("user_phrases").then((value) => {
-        if(value !== null) {
-            preferences.phrases = JSON.parse(value); // phrase
-        }
-      });
+    }).catch(() => {
+      console.warn("User phrase preferences are missing.")
     });
 }

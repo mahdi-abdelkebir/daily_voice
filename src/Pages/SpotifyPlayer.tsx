@@ -31,9 +31,7 @@ import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URL, SPOTIFY_TOKEN_REFRESH_URL, SPO
   // Api Config object, replace with your own applications client id and urls
   const spotifyConfig: ApiConfig = {
     clientID: SPOTIFY_CLIENT_ID,
-    redirectURL: SPOTIFY_REDIRECT_URL,
-    tokenRefreshURL: SPOTIFY_TOKEN_REFRESH_URL,
-    tokenSwapURL: SPOTIFY_TOKEN_SWAP_URL,
+    redirectURL: "io.identityserver.demo",
     scopes: [ApiScope.AppRemoteControlScope, ApiScope.UserFollowReadScope]
   }
   
@@ -57,7 +55,7 @@ import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URL, SPOTIFY_TOKEN_REFRESH_URL, SPO
       })
 
       } catch(err) {
-        props.navigation.navigate("Home");
+        // props.navigation.navigate("Home");
         alert("Couldn't authorize with or connect to Spotify "+err);
       }   
     }

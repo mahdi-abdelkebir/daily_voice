@@ -2,11 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Default Settings
 var settings = {
+    clear: false,
+    init: true,
+    first_time:false,
     apis: {
         service_api: true,
         dialogflow_api: true
     },
-    clear: false,
     voice: {
         mute: false,
         volume: 1,
@@ -24,7 +26,7 @@ var settings = {
 
 export const updateVoice = (key : string, value : any)  => {
     try {
-        AsyncStorage.setItem(key, value.toString()); // for future init
+        AsyncStorage.setItem("app_voice_settings", settings.voice.toString());
         settings.voice[key] = value // for every other view
     } catch (e) {
         alert("Error. Cannot save settings.")
