@@ -72,8 +72,8 @@ Here are a few pictures:
 - [X] Astrology News (by sign)
 - [X] Netflix Top Series/Movies (both or only one of them)
 - [X] Youtube Trending (By country, by category (gaming, music, movies, all))
-- [X] Weather 
-- [ ] Spotify
+- [X] Weather (current location, will ask for permission)
+- [ ] Spotify Play
 
 You can select a phrase to trigger which service (maybe mutiple at same time).
 
