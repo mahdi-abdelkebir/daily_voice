@@ -1,8 +1,8 @@
 import { OPENWEATHER_API_KEY } from '@env';
-import { getWeather, dailyForecast, showWeather, getLocation } from 'react-native-weather-api';
+import { getWeather, showWeather, getLocation } from 'react-native-weather-api';
 
 
-export async function getWeatherInfo() : Promise<any | undefined> {
+export async function weatherAPIRequest() : Promise<any | undefined> {
     var status : string = "success";
     var weather : any | undefined;
 

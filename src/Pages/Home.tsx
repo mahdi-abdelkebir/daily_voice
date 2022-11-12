@@ -1,22 +1,24 @@
 
 import React, {useCallback, useEffect, useRef} from 'react';
-import { View, ScrollView, InteractionManager, Pressable } from 'react-native';
+import { View, ScrollView, InteractionManager, Pressable} from 'react-native';
 import Tts from 'react-native-tts';
-import {Dialogflow_V2} from 'react-native-dialogflow';
+import NetInfo from "@react-native-community/netinfo";
 
-import MessageBubble from '../components/MessageBubble';
-import SpeechBar from '../components/SpeechBar';
-import { globalStyles } from '../assets/css/global';
-import AppBar from '../components/AppBar';
+import MessageBubble from '../Components/MessageBubble';
+import SpeechBar from '../Components/SpeechBar';
+import { globalStyles } from '../Assets/css/global';
+import AppBar from '../Components/AppBar';
 // import { NavigationContainer } from '@react-navigation/native';
-import { Link, useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
-import settings, { updateVoice } from '../settings';
-import services, { preferences, sendAPIRequest } from '../Services/services';
+import settings, { updateSettings } from '../Parameters/settings';
+import services, { requestAPI } from '../Parameters/services';
 
-import LoadingScreen from '../components/LoadingScreen';
-import getFormattedService from '../utils/api_formatter';
-import { getWeatherInfo } from '../Services/weatherapi';
+import LoadingScreen from '../Components/LoadingScreen';
+import getFormattedService from '../Tools/api_formatter';
+import preferences from '../Parameters/preferences';
+import { dialog_request } from '../Services/dialogflow';
+import NetworkDetector from '../Components/NetworkDetector';
 
 type Message = {
   who: string,
@@ -29,6 +31,16 @@ export default function Home ({ navigation }) {
   const [isMuted, setMuted] = React.useState<boolean>(settings.voice.mute);
   const scrollView = useRef<any>();
 
+  useEffect(() => {
+    Tts.setDucking(true);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadConfiguration();
+    }, [])
+  );
+  
   function loadConfiguration() {
     setIsReady(false);
     
@@ -62,41 +74,34 @@ export default function Home ({ navigation }) {
           setIsReady(true)
         }).then(async () => {
             if (settings.first_time) {
-
+              botResponse("Hello user! Nice to meet you! Say F.A.Q. for details on what this application is about and advices on what to say, and please visit the settings menu and check out our available services!");
+            } else {
+              botResponse("Welcome back, what do you want to know about today?"); 
             }
-            handleGoogleResponse("Welcome back, what do you want to know about today?");
         });
       } else {
         setIsReady(true)
       }
     });
   }
-
-  useEffect(() => {
-    Tts.setDucking(true);
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadConfiguration();
-    }, [])
-  );
   
   
-  function getResponse(msg: string) {    
-    Dialogflow_V2.requestQuery(msg, 
+  function getDialogResponse(msg: string) {    
+    dialog_request(msg, 
       (result:any)=> {
         try {
           // if (result.queryResult.fulfillmentText)
           // if (result.queryResult.fulfillmentMessages[0])
-          //   handleGoogleResponse(result.queryResult.fulfillmentMessages[0].text.text[0])
+          //   botResponse(result.queryResult.fulfillmentMessages[0].text.text[0])
           // else
-            handleGoogleResponse(result.queryResult.fulfillmentText)
+            botResponse(result.queryResult.fulfillmentText)
         } catch (e) {
-          alert(e+" - "+JSON.stringify(result))
+          console.warn(e+" - "+JSON.stringify(result))
         }
       }, 
-      error=> handleGoogleResponse("Error. "+error.message),
+      error=> {
+        botResponse("Error. "+error)
+      }
     );
   }
     
@@ -107,30 +112,26 @@ export default function Home ({ navigation }) {
     ));
   }
 
-  function handleGoogleResponse(data : any) {
+  function botResponse(data : any) {
       says("bot", data);
       if (!isMuted) {
         Tts.speak(data);
       }
   }
 
-
-  // function test() {
-  //   Object(services).forEach(async (service) => {
-  //       var key = service.key ;
-  //       if (key != "spotify" && key != "weather") {
-  //         sendAPIRequest(service)
-  //           .then(data => {
-  //             handleGoogleResponse(key+" "+getFormattedService(key, data))
-  //           })
-  //           .catch(err => handleGoogleResponse("Error. "+key+":  "+err));
-  //         }
-  //     });
-  // }
-
-  function handleUserRequest(result : string | null) {
+  async function userRequest(result : string | null) {
     if (result != null) {
       says("user", result.charAt(0).toUpperCase() + result.slice(1));
+
+      var connectionState =  await NetInfo.fetch();
+      if (!connectionState.isConnected) {
+        if (Math.round(Math.random()) == 1)
+          botResponse("User. Please connect to the internet first, so that I can process your words.")
+        else
+          botResponse("User. Internet connection is required to use this application, so please connect to the internet before talking more.")
+        
+        return;
+      }
 
       var isNormal = true;
       var r = result.toLowerCase();
@@ -141,51 +142,61 @@ export default function Home ({ navigation }) {
           isNormal = false;
 
           switch(r) {
+            case settings.commands.Faq:
+                botResponse("Let me show you the ropes.")
+                botResponse("First, I'll tell you about the application. This application was designed to reduce your daily meaningless scrolling thorough Facebook and Youtube pages like a ghost, and set a clear target for yourself.");
+                botResponse("Although, our services are limited but our developpers are pretty invested in this application and they may choose to add more later on.");
+                botResponse("Next, we have some voice commands. You can choose mute me by telling me to shut up (and please don't do that), you can unmute me by telling me to speak.");
+                botResponse("You can check what commands and services we currently have available in the Settings menu. To get there, you can either simply say 'Settings' or click on the Cogwheel icon on your top-right.");
+                botResponse("Also, I have to say, we can also just chat casually, as my developpers decided to increase my sense of humour so I think I'm a pretty funny robot.");
+                break;
             case settings.commands.Settings:
               navigation.navigate("Settings");
               break;
             case settings.commands.Mute:
               if (isMuted == false) {
-                updateVoice("mute", true);
+                updateSettings("mute", true);
                 setMuted(true);
-                handleGoogleResponse(";(")
+                botResponse(";(")
               } else {
-                handleGoogleResponse("why tho")
+                botResponse("why tho")
               }
               break;
             case settings.commands.Unmute:
               if (isMuted == true) {
-                updateVoice("mute", false);
+                updateSettings("mute", false);
                 setMuted(false);
-                handleGoogleResponse("*deep breath*")
+                botResponse("*deep breath*")
+              } else {
+                botResponse("What are you doing? Are you testing something?")
               }
               break;
             case settings.commands.Summary:
               if (settings.apis.service_api == true) {
                 var output : any = false;
-                handleGoogleResponse("Alright. Let me set things up.");
-                Object(services).forEach(async (service) => {
-                  var key = service.key ;
-                  if (preferences.services[key].daily_summary == true) {
+                botResponse("Alright. Let me set things up.");
+                await Object(services).forEach(async (service) => {
+                  var key = service.key;
+                  var pref = preferences.services[key];
+                  
+                  if (pref && pref.daily_summary === true) {
                     output = true;
-                    if (key != "spotify") {
-                      request(service)
-                        .then(data => {
-                          handleGoogleResponse(getFormattedService(key, data))
-                        })
-                        .catch(err => handleGoogleResponse("Error ("+service.title+"): "+err));
-                      }
+                    requestAPI(service)
+                      .then(data => {
+                        botResponse(getFormattedService(key, data))
+                      })
+                      .catch(err => botResponse("Error ("+service.title+"): "+err));
                     }
                 });
                 
-                if (output == true) {
-                  handleGoogleResponse("All services summaries are disabled.");
+                if (output == false) {
+                  botResponse("All services summaries are disabled.");
                 }
               } else {
-                handleGoogleResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
+                botResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
               }
-              break;
               
+              break;
           }
 
           return;
@@ -201,60 +212,43 @@ export default function Home ({ navigation }) {
             //   navigation.navigate("Player");
             // } else {
               if (key != "spotify") {
-                handleGoogleResponse("Alright, wait a second.")
-                request(service)
+                botResponse("Alright, wait a second.")
+                requestAPI(service)
                   .then(data => {
-                    console.log(key +" response data: ")
-                    console.log(data)
-                    handleGoogleResponse(getFormattedService(key, data))
+                    botResponse(getFormattedService(key, data))
                   })
-                  .catch(err => handleGoogleResponse("Error ("+service.title+"): "+err));
+                  .catch(err => botResponse("Error ("+service.title+"): "+err));
               } else {
-                handleGoogleResponse("Sorry, this feature ("+ service.title +") are not implemented yet.")
+                botResponse("Sorry, this feature ("+ service.title +") are not implemented yet.")
               }
             // }
           } else {
-            handleGoogleResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
+            botResponse("Sorry, this feature is disabled. I'm just a regular chatbot now.");
           }
         }
       });
     
       if (isNormal)
-        getResponse(result);
-    }
-  }
-
-  async function request(service) {
-    if (service.key == "weather") {
-      return await getWeatherInfo();
-    } else {
-      return await sendAPIRequest(service);
+        getDialogResponse(result);
     }
   }
 
   function onPressSpeaker() {
     const muted = !isMuted;
-    updateVoice("mute", muted);
+    if (muted) {
+      Tts.stop();
+    }
+    updateSettings("mute", muted);
     setMuted(muted);
   };
 
-  function repeatThis(item : Message) {
+  async function repeatThis(item : Message) {
     if (item.who == "bot") {
+      await Tts.stop();
       Tts.speak(item.msg);
     }
   };
-  // muteHandle(isMuted) {
-    
-  //   if (isMuted) {
-  //     Tts.setDefaultPitch(0)
-  //   } else {
-  //     Tts.setDefaultPitch(1)
-  //   }
-
-  //   this.setState({
-  //     'mute': isMuted
-  //   })
-  // }
+  
 
   if (!isReady)
     return <LoadingScreen/>
@@ -262,7 +256,7 @@ export default function Home ({ navigation }) {
     return (
       <View style={globalStyles.outer}>
           <AppBar
-           navigation = {navigation}
+            navigation = {navigation}
           />
           <ScrollView ref={scrollView} style={globalStyles.messages}
           onContentSizeChange={ () => {  
@@ -283,7 +277,7 @@ export default function Home ({ navigation }) {
           <SpeechBar
             isMuted = {isMuted}
             muteCallback = {onPressSpeaker}
-            resultCallback = {handleUserRequest}
+            resultCallback = {userRequest}
           />
       </View>
     );

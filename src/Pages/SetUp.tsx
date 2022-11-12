@@ -11,7 +11,7 @@
 // } from 'react-native';
 
 // import SettingsList from 'react-native-settings-list';
-// import settings, { updateVoice } from '../env/settings';
+// import settings, { updateSettings } from '../env/settings';
 // import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import services, { preferences } from '../env/services';
 // import { InteractionManager} from 'react-native';

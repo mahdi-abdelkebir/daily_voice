@@ -5,9 +5,9 @@ import { ScrollView } from 'react-native';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Form, FormItem, Picker } from 'react-native-form-component';
 import SettingsList from 'react-native-settings-list';
-import { astrology_signs, netflix_categories, preferences, savePreference, youtube_categories, countries_codes } from '../../Services/services';
-import LoadingScreen from '../../components/LoadingScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { astrology_signs, netflix_categories, youtube_categories, countries_codes } from '../../Parameters/services';
+import LoadingScreen from '../../Components/LoadingScreen';
+import preferences, { savePreference } from '../../Parameters/preferences';
 
 export function ServiceSettings({ route, navigation }) {
     const { service, serviceKey} = route.params;
@@ -74,13 +74,14 @@ export function ServiceSettings({ route, navigation }) {
           }));
     }
 
-    function renderRest() {
+    // TODO: optimize, from services directly
+    function renderRest() { // EXTRA SETTINGS HERE
+    
         switch( serviceKey) {
             
             case "astrology":
                
                 return (
-                    // <Text> { JSON.stringify(item) } </Text>)
                     <Picker
                         type="modal"
                         selectedValueStyle={{marginLeft:10}}
@@ -161,7 +162,9 @@ export function ServiceSettings({ route, navigation }) {
                         onChangeText = {(newValue) => setServicePhrase(newValue)}
                     />
                 </Form>
-                <SettingsList borderColor='#d6d5d9' defaultItemSize={50} >
+
+                { service.summurizable == undefined || service.summurizable && service.summurizable == true? 
+                (<SettingsList borderColor='#d6d5d9' defaultItemSize={50} >
                     <SettingsList.Item
                         hasNavArrow={false}
                         title='Other'
@@ -177,8 +180,9 @@ export function ServiceSettings({ route, navigation }) {
                         switchOnValueChange={onSummaryDailyChange}
                         hasNavArrow={false}
                         title='Daily Summary'   
-                    />
-                </SettingsList>
+                    />   
+                </SettingsList>): <></>}
+                    
                 { renderRest() }
             </View>
         </View>

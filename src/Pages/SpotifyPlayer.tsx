@@ -22,11 +22,11 @@ import {
   PlayerState,
   Track
 } from 'react-native-spotify-remote';
-import { preferences } from '../Services/services';
 import { Pressable } from 'react-native';
 import { useEffect } from 'react';
-import LoadingScreen from '../components/LoadingScreen';
+import LoadingScreen from '../Components/LoadingScreen';
 import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URL, SPOTIFY_TOKEN_REFRESH_URL, SPOTIFY_TOKEN_SWAP_URL } from '@env';
+import preferences from '../Parameters/preferences';
 
   // Api Config object, replace with your own applications client id and urls
   const spotifyConfig: ApiConfig = {
@@ -113,7 +113,7 @@ import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URL, SPOTIFY_TOKEN_REFRESH_URL, SPO
               <Icon name="more-horizontal" color="white" size={24} />
             </RectButton> */}
           </View>
-          <Image source={require("../assets/music.jpg")} style={styles.cover} />
+          <Image source={require("../Assets/music.jpg")} style={styles.cover} />
           <View style={styles.metadata}>
             <View>
               <Text style={styles.song}>{track.name}</Text>

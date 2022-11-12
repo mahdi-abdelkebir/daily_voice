@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 
 import Voice from '@react-native-voice/voice';
-import { speechBarStyles } from '../assets/css/speechBar';
+import { speechBarStyles } from '../Assets/css/speechBar';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoxShadow} from 'react-native-shadow';
 

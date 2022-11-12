@@ -7,15 +7,17 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 
 import SettingsList from 'react-native-settings-list';
-import settings, { updateVoice } from '../settings';
+import settings, { clearAllData, updateSettings } from '../Parameters/settings';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import services, { preferences } from '../Services/services';
+import services from '../Parameters/services';
 import { InteractionManager} from 'react-native';
-import LoadingScreen from '../components/LoadingScreen';
+import LoadingScreen from '../Components/LoadingScreen';
+import preferences from '../Parameters/preferences';
 
 
 export function SettingsPage({ navigation }) {
@@ -76,7 +78,7 @@ export function SettingsPage({ navigation }) {
         try {
             var newState = !isMuted;
             setMute(newState) // for rendering this view
-            updateVoice("mute", newState)
+            updateSettings("mute", newState)
         } catch (e) {
             alert("error, can't change data")
         }
@@ -111,14 +113,56 @@ export function SettingsPage({ navigation }) {
             />
 
            <SettingsList.Item
-              title='Clear Session'
+              title='Clear session'
               onPress = {() => {
-                settings.clear = true; 
-                alert("Session cleared successfully.")
+                Alert.alert(
+                  "Clear session",
+                  "Are you sure about this? All the previous dialogue will be gone.",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    { text: "Yes", onPress: async () => {
+                      await clearAllData();
+
+                      settings.clear = true;
+                      settings.init = true;
+                      settings.session_start_datetime = "",
+                      alert("Successfully cleared.");
+                    }}
+                  ]
+                );
               }}
               itemWidth={70}
               titleStyle={{color:'black', fontSize: 16}}
             />
+
+            <SettingsList.Item
+              title='Clear Application Data'
+              onPress = {async () => {
+                Alert.alert(
+                  "Clear Application Data",
+                  "Are you sure about this? All your custom settings and phrases will be deleted.",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    { text: "Yes", onPress: async () => {
+                      await clearAllData();
+                      alert("Please restart the application.");
+                    }}
+                  ]
+                );
+              }}
+              itemWidth={70}
+              titleStyle={{color:'black', fontSize: 16}}
+            />
+
+
             <SettingsList.Header headerStyle={{marginTop:-5}}/>
             <SettingsList.Item
               title='Available Services'
@@ -189,7 +233,20 @@ export function SettingsPage({ navigation }) {
               itemWidth={70}
               titleStyle={{color:'black', fontSize: 15}}
               hasNavArrow={false}
-            />    
+            />
+            
+            <SettingsList.Item
+              icon={
+                <View style={styles.imageStyle}>
+                    <CommunityIcon name="help-rhombus-outline" size={30} />
+                </View>
+              }
+              title='Settings'
+              titleInfo={phrases.commands.Faq}
+              itemWidth={70}
+              titleStyle={{color:'black', fontSize: 15}}
+              hasNavArrow={false} />
+
             <SettingsList.Header headerStyle={{marginTop: -5}}/>
           </SettingsList>
         </View>

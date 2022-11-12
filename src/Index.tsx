@@ -2,20 +2,20 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SettingsPage } from './Pages/Settings';
 import Home from './Pages/Home';
-import settings  from './settings';
+import settings, { clearAllData }  from './Parameters/settings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
 
 import { AccentPage } from './Pages/Settings/Accent';
-import services, { preferences } from './Services/services';
 import { SpotifyPlayer } from './Pages/SpotifyPlayer';
 import { ServiceSettings } from './Pages/Settings/ServiceSettings';
-import LoadingScreen from './components/LoadingScreen';
+import LoadingScreen from './Components/LoadingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderBackButton } from '@react-navigation/elements';
-import { Dialogflow_V2 } from 'react-native-dialogflow';
-import { useEffect, useState, useCallback } from 'react';
-import { DIALOGFLOW_API_CLIENT_EMAIL, DIALOGFLOW_API_PRIVATE_KEY, DIALOGFLOW_API_PROJECT_ID, RAPIDAPI_KEY } from "@env";
+import { useEffect, useState } from 'react';
+import { DIALOGFLOW_API_PRIVATE_KEY, RAPIDAPI_KEY } from "@env";
+import preferences from './Parameters/preferences';
+import NetworkDetector from './Components/NetworkDetector';
 // import { AppRegistry } from 'react-native';
 
 export default function Index() {
@@ -30,26 +30,24 @@ export default function Index() {
   async function loadConfig() {
     SplashScreen.hide();
 
-    setMessage("Loading settings...")
-    await loadSettings().catch(() => {
-      settings.first_time = true;
+    await AsyncStorage.getItem("first_time").then(async (value) => {
+      if(value != null) {
+        setMessage("Loading settings...")
+        await loadSettings();
+  
+        setMessage("Loading user preferences...")
+        await loadPreferences();
+        console.log("old user")
+      } else {
+        settings.first_time = true;
+        AsyncStorage.setItem("first_time", "yes");
+        console.log("new user")
+      }
+    }).catch(async (e) => {
+      console.warn("first_time returned error", e)
     });
-
-    setMessage("Loading the main services...")
-    var dialogflow_key = DIALOGFLOW_API_PRIVATE_KEY;
-    if (dialogflow_key != undefined && DIALOGFLOW_API_CLIENT_EMAIL && DIALOGFLOW_API_PROJECT_ID) {
-      Dialogflow_V2.setConfiguration(
-        DIALOGFLOW_API_CLIENT_EMAIL,
-        dialogflow_key!,
-        Dialogflow_V2.LANG_ENGLISH,
-        DIALOGFLOW_API_PROJECT_ID,
-      );
-      console.log("DialogFlow was loaded successfully")
-    } else {
-      settings.apis.dialogflow_api = false;
-      console.warn("Speech was disabled for a good reason.")
-    }
     
+    setMessage("Unraveling some secrets...")
     var services_apikey = RAPIDAPI_KEY;
     if (services_apikey == undefined) {
       settings.apis.service_api = false;
@@ -58,17 +56,22 @@ export default function Index() {
       console.log("RAPIDAPI was loaded successfully")
     }
 
-
-    if (settings.first_time == false) {
-      setMessage("Loading user preferences...")
-      await loadPreferences();
+    var dialog_key = DIALOGFLOW_API_PRIVATE_KEY;
+    if (dialog_key == undefined) {
+      settings.apis.dialogflow_api = false;
+      console.warn("Speech are disabled for a good reason.")
+    } else {
+      console.log("DialogFlow was loaded successfully")
     }
 
     setLoaded(true);
   }
 
   if (isLoaded) {
-     return <Navigation/>;
+     return <>
+      { settings.apis.dialogflow_api? (<NetworkDetector/>) : <></> }
+      <Navigation/>
+     </>;
   } else {
     return <LoadingScreen  message = {message} />
   }
@@ -144,6 +147,7 @@ function Navigation() {
 
 
 async function loadSettings() {
+  settings.current_date = new Date().toDateString();
   return AsyncStorage.getItem("app_voice_settings").then((value) => {
     if(value !== null) {
         settings.voice = JSON.parse(value); // phrase
@@ -152,11 +156,10 @@ async function loadSettings() {
 }
 
 async function loadPreferences() {
-    // await AsyncStorage.clear();
-
     await AsyncStorage.getItem("user_services").then((value) => {
       if(value !== null) {
           preferences.services = JSON.parse(value); // phrase
+          console.log("Loaded user service preferences.")
       }
     }).catch(() => {
       console.warn("User service preferences are missing.")
@@ -164,10 +167,12 @@ async function loadPreferences() {
   // });:
   
     await AsyncStorage.getItem("user_phrases").then((value) => {
-      if(value !== null) {
+      if(value != null) {
+        // console.log(JSON.stringify(value))
         preferences.phrases = JSON.parse(value); // phrase
+        console.log("Loaded user phrases.")
       }
-    }).catch(() => {
-      console.warn("User phrase preferences are missing.")
+    }).catch((e) => {
+      console.warn("User phrase preferences are missing. "+e)
     });
 }

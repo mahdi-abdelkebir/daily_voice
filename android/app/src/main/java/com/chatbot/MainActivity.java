@@ -16,7 +16,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Voice Summary";
+    return "Daily Voice";
   }
 
   // ----- Add the following --------

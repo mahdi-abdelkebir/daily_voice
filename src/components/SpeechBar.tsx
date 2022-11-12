@@ -8,9 +8,9 @@ import {
 import Voice, {
   SpeechResultsEvent,
 } from '@react-native-voice/voice';
-import { check_record_permission, request_record_permission } from '../utils/record_permission';
+import { check_record_permission, request_record_permission } from '../Tools/record_permission';
 
-import { speechBarStyles } from '../assets/css/speechBar';
+import { speechBarStyles } from '../Assets/css/speechBar';
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -18,7 +18,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import {BoxShadow} from 'react-native-shadow';
 import Tts from 'react-native-tts';
-import settings from '../settings';
+import settings from '../Parameters/settings';
 import AudioBox from './AudioBox';
 
 type Props = {
@@ -81,8 +81,8 @@ class SpeechBar extends Component<Props, State> {
 
     async _startRecognizing() {
         try {
+            await Tts.stop();
             await Voice.start('en-US');
-            Tts.stop();
         
             this.setState({
                 started: true
@@ -173,8 +173,11 @@ class SpeechBar extends Component<Props, State> {
                     ...microShadow
                 }}>  */}
                     <Pressable onPress={() => {
-                        this.setState({speakerMuted: !this.state.speakerMuted}), () => this.props.muteCallback()
-                    }}>
+                        this.setState( state => ({
+                            speakerMuted: !state.speakerMuted
+                        }), () => {
+                            this.props.muteCallback();
+                        })}}>
                         <MaterialCommunityIcon  name={ this.state.speakerMuted == false? "speaker": "speaker-off"} color="black" size={30} />
                     </Pressable>
                 {/* </BoxShadow> */}

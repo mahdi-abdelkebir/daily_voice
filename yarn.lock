@@ -1909,6 +1909,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/geolocation/-/geolocation-3.0.3.tgz"
   "version" "3.0.3"
 
+"@react-native-community/netinfo@^9.3.6":
+  "integrity" "sha512-SwbBnHZuXcCUpYdL6ebt4HPAZEugPASl+RPxIyNe91Y+boZptzAFLywYW6yU93DYAhiHHFQBL6x6LxwF/K/tOQ=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/netinfo/-/netinfo-9.3.6.tgz"
+  "version" "9.3.6"
+
 "@react-native-voice/voice@^3.1.5":
   "integrity" "sha512-lMLOP0bEIXUKJnmKs0QFLy79IbeIky4PU2GWGh9dmYM+IWmJ54qiBZvwfXmA/Ekk7MlyQ65PvfW69j0auGxqRw=="
   "resolved" "https://registry.npmjs.org/@react-native-voice/voice/-/voice-3.1.5.tgz"

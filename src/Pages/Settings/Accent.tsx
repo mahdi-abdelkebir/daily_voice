@@ -6,9 +6,9 @@ import { AppRegistry, Text, View } from 'react-native';
 import Tts, { Voice } from 'react-native-tts';
 import { useFocusEffect } from '@react-navigation/native';
 import SettingsList from 'react-native-settings-list'
-import settings, { updateVoice } from '../../settings';
+import settings, { updateSettings } from '../../Parameters/settings';
 import { ScrollView } from 'react-native';
-import LoadingScreen from '../../components/LoadingScreen';
+import LoadingScreen from '../../Components/LoadingScreen';
 
 export function AccentPage() {
   var [accent, setAccent] = React.useState('');
@@ -18,8 +18,8 @@ export function AccentPage() {
   // var [engines, setEngines] = React.useState<Engine[]>([]);
 
   function setSelection(languageId, accentId) {
-    updateVoice("languageId", languageId);
-    updateVoice("accentId", accentId);
+    updateSettings("languageId", languageId);
+    updateSettings("accentId", accentId);
     setAccent(accentId);
   }
 
