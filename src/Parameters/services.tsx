@@ -41,8 +41,8 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
         title: "Youtube Trending",
         description: "Get today's most trending videos in the category and country that you like.",
         icon: "youtube",
-        // limit: 15,
-        cache: true,
+        limit: 15,
+        // cache: true,
         api: {
             method: "GET",
             host:"youtube-v2.p.rapidapi.com",
@@ -86,6 +86,7 @@ const services : any[] = [ // must be ordered exactly like voice command in sett
         description: "Get a random name from the internet.",
         icon: "guy-fawkes-mask",
         summurizable: false,
+        limit:50,
         api: {
             method: "GET",
             host:"random-name-generator1.p.rapidapi.com",

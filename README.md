@@ -46,20 +46,6 @@ Here are a few pictures:
   </tr>
 </table>
 
-# First versions was like:
-
-<table cellpadding="0">
-  <tr style="padding: 0">
-    <!-- GitHub Stats Card -->  
-    <td valign="top">
-        <img src="./screenshots/v1_pic1.jpg" /> 
-    </td>
-    <td valign="top">
-        <img src="./screenshots/v1_pic2.jpg"  /> 
-     </td>
-  </tr>
-</table>
-
 # Voice Commands: 
 
 - Shut Up: will mute bot
