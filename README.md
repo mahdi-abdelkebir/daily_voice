@@ -12,7 +12,7 @@ I also used too much time going on about basic things and abstract vague damned 
 
 These APIs were implemented thanks to RapidAPIs.
 
-I really want to expand this project more, it's actually really interesting. I especially discovered that there's a music agent in DialogFlow, too late sadly. I also had ideas about the Weather API. Well anyway.
+I really want to expand this project more, it's actually really interesting. I especially discovered that there's a music agent in DialogFlow, too late sadly. I also had ideas about the Weather API (Finally added, suprisingly easy compared to the rest lol). Well anyway.
 
 Here are a few pictures:
 
